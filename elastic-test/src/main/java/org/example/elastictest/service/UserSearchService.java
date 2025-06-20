@@ -2,7 +2,6 @@ package org.example.elastictest.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.elastictest.document.UserDocument;
-import org.example.elastictest.document.repository.UserSearchRepository;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -16,18 +15,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserSearchService {
 
-    private final UserSearchRepository userSearchRepository;
-
     private final ElasticsearchOperations elasticsearchOperations;
 
     public List<UserDocument> searchName(String input) {
 
         NativeQuery query = NativeQuery.builder()
-                .withQuery(builder -> builder
-                        .fuzzy(f -> f
-                                .field("name")
-                                .value(input)
-                                .fuzziness("AUTO")
+                .withQuery(q -> q
+                        .bool(b -> b
+                                .should(s1 -> s1.fuzzy(f -> f
+                                        .field("name")
+                                        .value(input)
+                                        .fuzziness("AUTO")
+                                ))
+                                .should(s2 -> s2.fuzzy(f -> f
+                                        .field("introduce")
+                                        .value(input)
+                                        .fuzziness("AUTO"))
+                                ).minimumShouldMatch("1")
                         )
                 )
                 .build();

@@ -13,8 +13,8 @@ public class InitRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        userSearchRepository.save(new UserDocument("1", "hayan"));
-        userSearchRepository.save(new UserDocument("2", "hailey"));
-        userSearchRepository.save(new UserDocument("3", "hajin"));
+        userSearchRepository.save(new UserDocument("1", "hayan", "Hello my name is hayan"));
+        userSearchRepository.save(new UserDocument("2", "hailey", "I'm so happy"));
+        userSearchRepository.save(new UserDocument("3", "hajin", "I'm so Sad about that"));
     }
 }
